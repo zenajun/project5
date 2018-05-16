@@ -1,11 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Firebase from 'firebase';
 
 class App extends React.Component {
     render() {
       return (
         <div>
-          <p>I need this to show up on gh-pages</p>
+         
 
         </div>
       )

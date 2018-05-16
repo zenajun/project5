@@ -17,6 +17,7 @@
     "babelify": "^7.3.0",
     "browser-sync": "^2.18.6",
     "browserify": "^13.3.0",
+    "firebase": "^5.0.2",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-notify": "^2.2.0",
