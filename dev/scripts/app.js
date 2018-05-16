@@ -5,7 +5,8 @@ class App extends React.Component {
     render() {
       return (
         <div>
-          Hello World
+          <p>I need this to show up on gh-pages</p>
+
         </div>
       )
     }
