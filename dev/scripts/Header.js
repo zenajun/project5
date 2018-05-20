@@ -4,7 +4,7 @@ class Header extends React.Component {
   render() {
     return (
       <header>
-        < h1 >Find your Toronto Off - Leash Dog Park</h1>
+        <h1>Toronto - Unleashed</h1>
       </header>
     )
   }
