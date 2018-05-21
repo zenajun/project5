@@ -32,12 +32,20 @@ class App extends React.Component {
     this.makeMarker = this.makeMarker.bind(this);
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.filterLocations = this.filterLocations.bind(this);
+    this.afterStateUpdates = this.afterStateUpdates.bind(this);
+    // this.getNewGeocodes = this.getNewGeocodes.bind(this);
   };
   
   componentDidUpdate() {
-    
+    this.afterStateUpdates();
+  }
+  
+  componentDidMount() {
+  // this.handleChange();
   }
 
+ 
   makeMarker() {
     // Users current location
     navigator.geolocation.getCurrentPosition(function (position) {
@@ -112,97 +120,108 @@ class App extends React.Component {
     }   
   }
 
-  handleChange(e) {  
-    
-    // this.setState({
-     
-    // });
-    
-    
-    // const geolocations = Array.from(this.state.geolocation);
-    
+  handleUniquePark(e) {
+    console.log('unique click');
+    this.setState({
+      [e.target.name]: e.target.value === 'false' ? true : false,
+      allParks: false
+    }, function afterStateUpdates() {;
+      // this.filterLocations();
+    });
+
+  }
+  
+  handleChange(e) {    
+    this.setState({
+      [e.target.name]: e.target.value === 'false' ? true : false,
+      allParks: false
+    }, function afterStateUpdates() {;    
+      this.filterLocations();
+    });   
+  }
+  
+  afterStateUpdates() {
+    // callback to update to 
+  }
+
+  filterLocations() {
     const dbRef = firebase.database().ref();
     dbRef.on('value', (snapshot) => {
       const dogParks = snapshot.val();
-      const parkGeolocation = []          
+      const parkGeolocation = []
       const geoLat = dogParks.lat;
-      const geoLng = dogParks.lng; 
-      
-      const statusFence = this.state.fen;
-      const statusSmallDog = this.state.sda;
-      const statusDogWalker = this.state.cdw;
-      
-      if (statusFence === true) {
-        console.log('fence is true');
-      } else {
-        console.log('fence is false');        
-      }
-      console.log(`fence ${statusFence}`);
-      console.log(`small dog ${statusSmallDog}`);
-      console.log(`dog walker ${statusDogWalker}`);
-      
+      const geoLng = dogParks.lng;
+
       // find park that meets the 3 criteria (fen, sda and cdw)
       // Fenced parks
-      const fenced = dogParks.filter((dogPark) => {  
+      const fenced = dogParks.filter((dogPark) => {
         const parkGeolocation = []
-     
+
         if (this.state.fen === true) {
-          console.log('fence true');          
           return dogPark.fen === true;
         } else {
-          console.log('fence false');          
           return dogPark.fen === false;
         }
-      })
-      // .filter((smallDog) => {
-      //   if (this.state.sda === true) {
-      //     console.log('small dog true');          
-      //     return smallDog.sda === false;
-      //   } else {
-      //     console.log('small dog false');          
-      //     return smallDog.sda === true;      
-      //   }        
-      // })
-      .map((geocode) => {
+      }).filter((smallDog) => {             //small dogs
+        if (this.state.sda === true) {
+          return smallDog.sda === true;          
+        } else {
+          return smallDog.sda === false;          
+        }
+      }).filter((dogWalker) => {  // commercial dog walkers
+        if (this.state.cdw === true) {
+          return dogWalker.cdw === true;
+        } else {
+          return dogWalker.cdw === false;
+        }        
+      }).map((geocode) => {
         const geoLat = geocode.lat;
         const geoLng = geocode.lng;
-          
-        parkGeolocation.push({geoLat, geoLng});          
-        });      
-        this.setState({
-          geolocation: parkGeolocation,
-          [e.target.name]: e.target.value === 'false' ? true : false,
-          allParks: false
-        });
+
+        parkGeolocation.push({ geoLat, geoLng });
       });
-     
-      
-    }
-  
+      this.setState({
+        geolocation: parkGeolocation,
+      });
+    });
+  }
+
   render() {
     return (
       <div className="wrapper">
         <Header />
-        <form>
-          <label htmlFor="viewAll">View All</label>
-          <input type="radio" name="mapType" id="viewAll" name="allParks" onChange={this.handleRadioChange} value={true}/>
+        <main>
+          <form>
+            <label htmlFor="viewAll">View All</label>
+            <input type="radio" id="viewAll" name="allParks" onChange={this.handleRadioChange} value={true}/>
 
-          <label htmlFor="custom">Filter</label>
-          <input type="radio" name="mapType" id="custom" name="allParks" onChange={this.handleRadioChange} value={false}/>
-          <div className="customPark">
-            <label htmlFor="fence">Fenced</label>
-            <input type="checkbox" id="fence" name="fen" onChange={this.handleChange} value={this.state.fen}/>
+            <label htmlFor="viewAll">All Fenced Parks</label>
+            <input type="radio" id="allFenced" name="allParks" onChange={this.handleUniquePark} value={this.state.fen}/>
 
-            <label htmlFor="smallDog">Small Dogs Area</label>
-            <input type="checkbox" id="smallDog" name="sda" onChange={this.handleChange} value={this.state.sda}/>
+            <label htmlFor="viewAll">All Small Dog Parks</label>
+            <input type="radio" id="allSmallDogs" name="allParks" onChange={this.handleUniquePark} value={this.state.sda}/>
 
-            <label htmlFor="commercial">Commercial dog walkers</label>
-            <input type="checkbox" id="commercial" name="cdw" onChange={this.handleChange} value={this.state.cdw}/>           
+            <label htmlFor="viewAll">All Commercial Dog Walker Parks</label>
+            <input type="radio" id="allCdw" name="allParks" onChange={this.handleUniquePark} value={this.state.cdw}/>
+
+            <label htmlFor="custom">Filter</label>
+            <input type="radio" id="custom" name="allParks" onChange={this.handleRadioChange} value={false}/>
+            
+            <div className="customPark">
+              <label htmlFor="fence">Fenced</label>
+              <input type="checkbox" id="fence" name="fen" onChange={this.handleChange} value={this.state.fen}/>
+
+              <label htmlFor="smallDog">Small Dogs Area</label>
+              <input type="checkbox" id="smallDog" name="sda" onChange={this.handleChange} value={this.state.sda}/>
+
+              <label htmlFor="commercial">Commercial dog walkers</label>
+              <input type="checkbox" id="commercial" name="cdw" onChange={this.handleChange} value={this.state.cdw}/>           
+            </div>
+          </form>
+          <div className="mapContainer">
+            {this.makeMarker()}          
           </div>
-        </form>
-        <div className="mapContainer">
-          {this.makeMarker()}          
-        </div>
+        </main>
         <Footer />
       </div>
     )
