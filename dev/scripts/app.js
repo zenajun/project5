@@ -21,8 +21,8 @@ class App extends React.Component {
   constructor() {
     super();    
     this.state = {
-      // name: '',
-      // address: '',
+      userLat: '',
+      userLng: '',
       geolocation: '',
       fen: false,
       cdw: false,
@@ -33,67 +33,43 @@ class App extends React.Component {
     this.handleRadioChange = this.handleRadioChange.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.filterLocations = this.filterLocations.bind(this);
-    this.afterStateUpdates = this.afterStateUpdates.bind(this);
-    // this.getNewGeocodes = this.getNewGeocodes.bind(this);
   };
-  
-  componentDidUpdate() {
-    this.afterStateUpdates();
-  }
-  
-  componentDidMount() {
-  // this.handleChange();
-  }
-
  
+
   makeMarker() {
-    // Users current location
-    navigator.geolocation.getCurrentPosition(function (position) {
-      const userLat = position.coords.latitude;
-      const userLng = position.coords.longitude;
-      // console.log(userLat, userLng);
-    });
-    
-    // 
     const geolocations = Array.from(this.state.geolocation);
 
     const MapWithAMarker = withScriptjs(withGoogleMap(props =>
       <GoogleMap
       defaultZoom={11}
-      defaultCenter={{ lat: 43.731394, lng: -79.3575282}}
+      defaultCenter={{ lat: 43.669019, lng: -79.377169}}
       >
-   
-      {        
+      <Marker className="red" />
+      {
         geolocations.map((location,i) => {
-          // console.log(location);
           return (
             <Marker position={{ lat: location.geoLat, lng: location.geoLng }} 
             key={i} 
             onClick={props.onToggleOpen}
-            >
-            {props.isOpen && <InfoWindow onCloseClick={props.onToggleOpen}>
-                <FaAnchor />
-              </InfoWindow>}
-            </Marker>
+            >            
+          </Marker>
           )        
         })
       }        
       </GoogleMap>     
-    ));
-    
+    ));    
     return (
       <MapWithAMarker
           googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
-          containerElement={<div style={{ height: '75vh' }} />}
-          mapElement={<div style={{ height: '100%' }} />} />
+          containerElement={<div style={{ height: '60vh' }} />}
+          mapElement={<div style={{ height: '100%' }} />} 
+      />
     )    
   }
 
   handleRadioChange(e) {
-    e.stopPropagation();
     this.setState({
-      // [e.target.name]: e.target.value === 'false' ? true : false,
       allParks: e.target.value === 'false' ? false : true
     });
     
@@ -110,7 +86,7 @@ class App extends React.Component {
         dogParks.map((dogPark) => {  
           const geoLat = dogPark.lat;
           const geoLng = dogPark.lng;
-          // console.log(geoLat, geoLng);
+
           parkGeolocation.push({geoLat, geoLng})
         });
         this.setState({
@@ -120,29 +96,18 @@ class App extends React.Component {
     }   
   }
 
-  handleUniquePark(e) {
-    console.log('unique click');
-    this.setState({
-      [e.target.name]: e.target.value === 'false' ? true : false,
-      allParks: false
-    }, function afterStateUpdates() {;
-      // this.filterLocations();
-    });
-
-  }
-  
   handleChange(e) {    
     this.setState({
       [e.target.name]: e.target.value === 'false' ? true : false,
       allParks: false
-    }, function afterStateUpdates() {;    
+    }, function() {;    
       this.filterLocations();
     });   
   }
   
-  afterStateUpdates() {
-    // callback to update to 
-  }
+  // afterStateUpdates() {
+  //   // callback to update state
+  // }
 
   filterLocations() {
     const dbRef = firebase.database().ref();
@@ -188,38 +153,40 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className="wrapper">
-        <Header />
+      <div>       
+          <Header />
+        
         <main>
-          <form>
-            <label htmlFor="viewAll">View All</label>
-            <input type="radio" id="viewAll" name="allParks" onChange={this.handleRadioChange} value={true}/>
+          <div className="wrapper">
+            <form>
+              <label htmlFor="viewAll">View All</label>
+              <input type="radio" id="viewAll" name="allParks" onChange={this.handleRadioChange} value={true}/>
 
-            <label htmlFor="viewAll">All Fenced Parks</label>
-            <input type="radio" id="allFenced" name="allParks" onChange={this.handleUniquePark} value={this.state.fen}/>
+              <label htmlFor="custom">Filter</label>
+              <input type="radio" id="custom" name="allParks" onChange={this.handleRadioChange} value={false}/>
+              
+              <div className="customPark">
+                <ul>
+                  <li>
+                    <input type="checkbox" id="fence" name="fen" onChange={this.handleChange} value={this.state.fen}/>
+                    <label htmlFor="fence">Fenced</label>
+                  </li>
 
-            <label htmlFor="viewAll">All Small Dog Parks</label>
-            <input type="radio" id="allSmallDogs" name="allParks" onChange={this.handleUniquePark} value={this.state.sda}/>
+                  <li>
+                    <input type="checkbox" id="smallDog" name="sda" onChange={this.handleChange} value={this.state.sda}/>
+                    <label htmlFor="smallDog">Small Dogs Area</label>
+                  </li>
 
-            <label htmlFor="viewAll">All Commercial Dog Walker Parks</label>
-            <input type="radio" id="allCdw" name="allParks" onChange={this.handleUniquePark} value={this.state.cdw}/>
-
-            <label htmlFor="custom">Filter</label>
-            <input type="radio" id="custom" name="allParks" onChange={this.handleRadioChange} value={false}/>
-            
-            <div className="customPark">
-              <label htmlFor="fence">Fenced</label>
-              <input type="checkbox" id="fence" name="fen" onChange={this.handleChange} value={this.state.fen}/>
-
-              <label htmlFor="smallDog">Small Dogs Area</label>
-              <input type="checkbox" id="smallDog" name="sda" onChange={this.handleChange} value={this.state.sda}/>
-
-              <label htmlFor="commercial">Commercial dog walkers</label>
-              <input type="checkbox" id="commercial" name="cdw" onChange={this.handleChange} value={this.state.cdw}/>           
+                  <li>
+                    <input type="checkbox" id="commercial" name="cdw" onChange={this.handleChange} value={this.state.cdw}/>           
+                    <label htmlFor="commercial">Commercial dog walkers</label>
+                  </li>
+                </ul>
+              </div>
+            </form>            
+            <div>
+              {this.makeMarker()} 
             </div>
-          </form>
-          <div className="mapContainer">
-            {this.makeMarker()}          
           </div>
         </main>
         <Footer />

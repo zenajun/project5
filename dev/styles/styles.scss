@@ -1,51 +1,112 @@
+@import 'setup';
+
 html {
   font-size: 62.5%;
 }
 
 body {
-  margin: 0;
   font-size: 2rem;   
   font-family: Arial, Helvetica, sans-serif;
+  @media (min-width: 740px) {
+    font-size: 1.6rem;
+  }
 }
 
+.wrapper {
+  @media (min-width: 1040px) {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+}
 
 header {
-  border-bottom: 2px solid black;
-  h1 {
-      font-family: 'Permanent Marker', cursive;
+  border-bottom: 2px solid #000b42;
+  @media (min-width: 740px) {
+    height: 15vh;
+    p {
       text-align: center;
-      font-size: 2.5rem;
+    }
   }
-
+  h1 {
+    font-family: 'Permanent Marker', cursive;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-top: 0;
+    @media (min-width: 740px) {
+      font-size: 3.5rem;
+    }
+  }
 }
 
-form {
-  #custom:checked ~ .customPark{
-    visibility: visible;
+main {
+  @media (min-width: 740px) {    
+    height: 70vh;    
   }
-  .customPark {
-    visibility: hidden;
+  form {
+    padding-top: 15px;
+    #custom:checked ~ .customPark{
+      display: block;
+      @media (min-width: 740px) {
+        visibility: visible;
+      }
+    }
+    input[type=radio] {
+      margin-right: 10px;
+      margin-left: 2px;
+    }
+    .customPark {
+      padding-top: 15px;
+      display: none;
+      @media (min-width: 740px) {
+        visibility: hidden;
+        display: block;
+
+      }
       input[type=checkbox] {
           margin-right: 15px;
       }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        @media (min-width: 740px) {
+          display: flex;  
+          li {
+            padding-right: 15px;
+            input[type=checkbox] {
+              margin-right: 0;
+            }
+          }
+        }
+      }      
+    }
   }
-
 }
 
-// .mapContainer {
-//   // height: 70vh;
-// }
-
+.mapContainer {
+  height: 70vh;
+}
+// 
 footer {
-  // height: 15vh;
-  background: #00116b;
+  padding: 20px 0;
+  background: #000b42;
   color: whitesmoke;
+  @media (min-width: 740px) {
+    height: 15vh;
+  }
   p {
-      margin: 0;
+    font-size: 1.6rem;  
+    // margin: 0;
   }
   a {
-      text-decoration: none;
-      color: white;
+    text-decoration: none;
+    color: white;
   }
 }
 
+footer .wrapper {
+  @media (min-width: 740px) {
+    display: flex;
+    justify-content: space-between; 
+  }
+}
