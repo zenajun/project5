@@ -44,7 +44,6 @@ class App extends React.Component {
       defaultZoom={11}
       defaultCenter={{ lat: 43.669019, lng: -79.377169}}
       >
-      <Marker className="red" />
       {
         geolocations.map((location,i) => {
           return (
@@ -60,7 +59,7 @@ class App extends React.Component {
     ));    
     return (
       <MapWithAMarker
-          googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
+          googleMapURL = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCDY4rM7wJyPImzmpVBD2mrtH5tnolGEBo&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
           containerElement={<div style={{ height: '60vh' }} />}
           mapElement={<div style={{ height: '100%' }} />} 
