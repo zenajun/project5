@@ -7,9 +7,7 @@ html {
 body {
   font-size: 2rem;   
   font-family: Arial, Helvetica, sans-serif;
-  @media (min-width: 740px) {
-    font-size: 1.6rem;
-  }
+  background: #111c57;
 }
 
 .wrapper {
@@ -21,29 +19,30 @@ body {
 
 header {
   border-bottom: 2px solid #000b42;
+  padding-bottom: 25px;
+  background: white;
+  padding-top: 1px;
   @media (min-width: 740px) {
-    height: 15vh;
     p {
       text-align: center;
+      margin: 0;
     }
   }
   h1 {
     font-family: 'Permanent Marker', cursive;
     text-align: center;
     font-size: 2.5rem;
-    margin-top: 0;
     @media (min-width: 740px) {
-      font-size: 3.5rem;
+      font-size: 5rem;
     }
   }
 }
 
 main {
-  @media (min-width: 740px) {    
-    height: 70vh;    
-  }
+  padding: 25px 0 0;
+  background: white;
   form {
-    padding-top: 15px;
+    padding: 15px 0;
     #custom:checked ~ .customPark{
       display: block;
       @media (min-width: 740px) {
@@ -51,8 +50,8 @@ main {
       }
     }
     input[type=radio] {
-      margin-right: 10px;
-      margin-left: 2px;
+      margin-right: 30px;
+      margin-left: 5px;
     }
     .customPark {
       padding-top: 15px;
@@ -88,15 +87,12 @@ main {
 }
 // 
 footer {
-  padding: 20px 0;
-  background: #000b42;
+  padding: 0;
+  background: #111c57;
   color: whitesmoke;
-  @media (min-width: 740px) {
-    height: 15vh;
-  }
   p {
     font-size: 1.6rem;  
-    // margin: 0;
+    margin-top: 35px;
   }
   a {
     text-decoration: none;

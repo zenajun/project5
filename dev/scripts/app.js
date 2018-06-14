@@ -61,7 +61,7 @@ class App extends React.Component {
       <MapWithAMarker
           googleMapURL = "https://maps.googleapis.com/maps/api/js?key=AIzaSyCDY4rM7wJyPImzmpVBD2mrtH5tnolGEBo&v=3.exp&libraries=geometry,drawing,places"
           loadingElement={<div style={{ height: '100%' }} />}
-          containerElement={<div style={{ height: '60vh' }} />}
+          containerElement={<div style={{ height: '50vh' }} />}
           mapElement={<div style={{ height: '100%' }} />} 
       />
     )    
